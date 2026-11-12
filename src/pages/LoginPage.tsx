@@ -9,13 +9,19 @@ import { BrandMark } from '@/components/layout/Sidebar'
 import { LangToggle } from '@/components/layout/LangToggle'
 import { cn } from '@/lib/utils'
 
+/** Demo credentials, prefilled so the client can sign in with one click. Remove for production. */
+const DEMO: Record<Role, { u: string; p: string }> = {
+  admin: { u: 'admin', p: 'admin123' },
+  agent: { u: '9876500001', p: 'agent123' },
+}
+
 export function LoginPage() {
   const { user, login } = useAuth()
   const { t } = useLang()
   const [role, setRole] = useState<Role>('admin')
   const [branch, setBranch] = useState('main')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState(DEMO.admin.u)
+  const [password, setPassword] = useState(DEMO.admin.p)
   const [show, setShow] = useState(false)
   const [remember, setRemember] = useState(true)
   const [error, setError] = useState('')
@@ -84,7 +90,7 @@ export function LoginPage() {
 
           <div className="mb-4.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2" role="radiogroup">
             {roles.map((r) => (
-              <button key={r.k} type="button" role="radio" aria-checked={role === r.k} onClick={() => setRole(r.k)}
+              <button key={r.k} type="button" role="radio" aria-checked={role === r.k} onClick={() => { setRole(r.k); setUsername(DEMO[r.k].u); setPassword(DEMO[r.k].p); setError('') }}
                 className={cn('flex items-center gap-2.5 rounded-2xl border-[1.5px] bg-white p-3 text-left transition duration-200',
                   role === r.k ? 'border-brand-500 bg-brand-50 ring-4 ring-brand-500/12' : 'border-line-strong hover:border-brand-300')}>
                 <span className={cn('grid h-8.5 w-8.5 shrink-0 place-items-center rounded-[10px] transition', role === r.k ? 'bg-brand-600 text-white' : 'bg-brand-50 text-brand-600')}><r.icon size={17} /></span>
